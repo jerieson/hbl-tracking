@@ -31,19 +31,21 @@ export const customerService = {
     }
 
     const response = await api.get<{ success: boolean; data: Customer[]; count: number }>(
-      `/customers?${params.toString()}`
+      `/api/customers?${params.toString()}`
     );
     return response.data;
   },
 
   async getById(id: number) {
-    const response = await api.get<{ success: boolean; data: Customer }>(`/customers/${id}`);
+    const response = await api.get<{ success: boolean; data: Customer }>(
+      `/api/customers/${id}`
+    );
     return response.data;
   },
 
   async create(customer: Partial<Customer>) {
     const response = await api.post<{ success: boolean; message: string; data: { id: number } }>(
-      '/customers',
+      '/api/customers',
       customer
     );
     return response.data;
@@ -51,19 +53,23 @@ export const customerService = {
 
   async update(id: number, customer: Partial<Customer>) {
     const response = await api.put<{ success: boolean; message: string }>(
-      `/customers/${id}`,
+      `/api/customers/${id}`,
       customer
     );
     return response.data;
   },
 
   async delete(id: number) {
-    const response = await api.delete<{ success: boolean; message: string }>(`/customers/${id}`);
+    const response = await api.delete<{ success: boolean; message: string }>(
+      `/api/customers/${id}`
+    );
     return response.data;
   },
 
   async getAreas() {
-    const response = await api.get<{ success: boolean; data: string[] }>('/customers/areas');
+    const response = await api.get<{ success: boolean; data: string[] }>(
+      '/api/customers/areas'
+    );
     return response.data;
   },
 };
