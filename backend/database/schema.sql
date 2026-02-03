@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS citadines_tracking;
-USE citadines_tracking;
-
 CREATE TABLE IF NOT EXISTS customers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(100),
