@@ -3,12 +3,14 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import path from 'path';
 import customerRoutes from './routes/Customerroutes';
 
 dotenv.config();
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
+const __dirname = path.resolve();
 
 // Middleware
 app.use(helmet());
@@ -20,27 +22,34 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+/* =========================
+   API ROUTES FIRST
+========================= */
 app.use('/api/customers', customerRoutes);
 
-// Health check
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ 
-    status: 'ok', 
+    status: 'ok',
     message: 'Citadines Tracking API is running',
     timestamp: new Date().toISOString()
   });
 });
 
-// 404 handler
-app.use((req: Request, res: Response) => {
-  res.status(404).json({ 
-    success: false,
-    message: 'Route not found' 
-  });
+/* =========================
+   FRONTEND (VITE BUILD)
+========================= */
+app.use(express.static(path.join(__dirname, 'dist')));
+
+/* =========================
+   SPA FALLBACK (CRITICAL)
+========================= */
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-// Error handler
+/* =========================
+   ERROR HANDLER
+========================= */
 app.use((err: Error, req: Request, res: Response, next: any) => {
   console.error(err.stack);
   res.status(500).json({ 
@@ -50,7 +59,6 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
   });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
