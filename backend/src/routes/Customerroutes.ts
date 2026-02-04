@@ -1,10 +1,14 @@
-// src/routes/Customerroutes.ts
 import { Router } from 'express';
 import { CustomerController } from '../controllers/Customercontroller';
 import { customerValidation, customerUpdateValidation } from '../middleware/validation';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
+// All customer routes require authentication
+router.use(authenticate);
+
+// Get all areas (no auth required for this, or keep it protected)
 router.get('/areas', CustomerController.getAreas);
 
 // Get all customers with optional filters

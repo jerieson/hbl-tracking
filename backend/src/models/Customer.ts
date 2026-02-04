@@ -6,11 +6,12 @@ export class CustomerModel {
   static async create(customer: Customer): Promise<number> {
     const [result] = await pool.execute<ResultSetHeader>(
       `INSERT INTO customers (
-        first_name, last_name, email, country_code, contact_number,
+        user_id, first_name, last_name, email, country_code, contact_number,
         designation, company_name, business_address, nature_of_business,
         latitude, longitude, area, remarks, status, tapped
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
+        customer.user_id,
         customer.first_name || null,
         customer.last_name || null,
         customer.email || null,
@@ -34,6 +35,11 @@ export class CustomerModel {
   static async findAll(filters?: CustomerFilters): Promise<Customer[]> {
     let query = 'SELECT * FROM customers WHERE 1=1';
     const params: any[] = [];
+
+    if (filters?.user_id) {
+      query += ' AND user_id = ?';
+      params.push(filters.user_id);
+    }
 
     if (filters?.status) {
       query += ' AND status = ?';
@@ -80,7 +86,7 @@ export class CustomerModel {
     const values: any[] = [];
 
     Object.entries(customer).forEach(([key, value]) => {
-      if (value !== undefined && key !== 'id' && key !== 'created_at') {
+      if (value !== undefined && key !== 'id' && key !== 'created_at' && key !== 'user_id') {
         fields.push(`${key} = ?`);
         values.push(value);
       }

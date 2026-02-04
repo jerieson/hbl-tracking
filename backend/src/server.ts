@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import customerRoutes from './routes/Customerroutes';
+import authRoutes from './routes/Authroutes';
 
 dotenv.config();
 
@@ -21,13 +22,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ 
     status: 'ok', 
-    message: 'Citadines Tracking API is running',
+    message: 'HBL API is running',
     timestamp: new Date().toISOString()
   });
 });

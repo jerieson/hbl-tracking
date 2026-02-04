@@ -1,5 +1,6 @@
 export interface Customer {
   id?: number;
+  user_id: number;
   first_name?: string;
   last_name?: string;
   email?: string;
@@ -24,4 +25,5 @@ export interface CustomerFilters {
   tapped?: boolean;
   search?: string;
   area?: string;
+  user_id?: number;
 }
