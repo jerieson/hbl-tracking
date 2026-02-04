@@ -61,8 +61,8 @@ export class CustomerController {
         tapped: req.query.tapped === 'true' ? true : req.query.tapped === 'false' ? false : undefined,
         search: req.query.search as string | undefined,
         area: req.query.area as string | undefined,
-        // Agents only see their own customers, admins see all
-        user_id: userRole === 'admin' ? undefined : userId
+        // Sales Executive only see their own customers, Administrator see all
+        user_id: userRole === 'Administrator' ? undefined : userId
       };
 
       const customers = await CustomerModel.findAll(filters);
@@ -106,7 +106,7 @@ export class CustomerController {
       }
 
       // Check if user has permission to view this customer
-      if (userRole !== 'admin' && customer.user_id !== userId) {
+      if (userRole !== 'Administrator' && customer.user_id !== userId) {
         res.status(403).json({
           success: false,
           message: 'Access denied'
@@ -157,7 +157,7 @@ export class CustomerController {
         return;
       }
 
-      if (userRole !== 'admin' && existingCustomer.user_id !== userId) {
+      if (userRole !== 'Administrator' && existingCustomer.user_id !== userId) {
         res.status(403).json({
           success: false,
           message: 'Access denied'
@@ -216,7 +216,7 @@ export class CustomerController {
         return;
       }
 
-      if (userRole !== 'admin' && existingCustomer.user_id !== userId) {
+      if (userRole !== 'Administrator' && existingCustomer.user_id !== userId) {
         res.status(403).json({
           success: false,
           message: 'Access denied'

@@ -121,15 +121,15 @@ export const customerUpdateValidation = [
   body('tapped')
     .optional()
     .isBoolean()
-    .withMessage('Tapped must be a boolean value'),
+    .withMessage('Tapped must be a boolean value')
   
-  body('latitude')
-    .optional()
-    .isFloat({ min: -90, max: 90 })
-    .withMessage('Latitude must be between -90 and 90'),
+  // body('latitude')
+  //   .optional()
+  //   .isFloat({ min: -90, max: 90 })
+  //   .withMessage('Latitude must be between -90 and 90'),
   
-  body('longitude')
-    .optional()
-    .isFloat({ min: -180, max: 180 })
-    .withMessage('Longitude must be between -180 and 180')
+  // body('longitude')
+  //   .optional()
+  //   .isFloat({ min: -180, max: 180 })
+  //   .withMessage('Longitude must be between -180 and 180')
 ];

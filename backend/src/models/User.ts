@@ -17,7 +17,7 @@ export class UserModel {
         user.email,
         password_hash,
         user.full_name || null,
-        user.role || 'agent',
+        user.role || 'Sales Executive',
         true
       ]
     );

@@ -47,13 +47,13 @@ export class AuthController {
           username,
           email,
           full_name,
-          role: 'agent' // Default role
+          role: 'Sales Executive' // Default role
         },
         password
       );
 
       // Generate token
-      const tokenPayload = { userId, username, role: 'agent' as const };
+      const tokenPayload = { userId, username, role: 'Sales Executive' as const };
       const signOptions: SignOptions = { expiresIn: JWT_EXPIRY };
       const token = jwt.sign(tokenPayload, JWT_SECRET, signOptions);
 
@@ -65,7 +65,7 @@ export class AuthController {
           username,
           email,
           full_name,
-          role: 'agent'
+          role: 'Sales Executive'
         },
         message: 'Registration successful'
       };

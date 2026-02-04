@@ -7,7 +7,7 @@ export interface AuthRequest extends Request {
   user?: {
     userId: number;
     username: string;
-    role: 'admin' | 'agent';
+    role: 'Administrator' | 'Sales Executive';
   };
 }
 
@@ -33,7 +33,7 @@ export const authenticate = (
       const decoded = jwt.verify(token, JWT_SECRET) as {
         userId: number;
         username: string;
-        role: 'admin' | 'agent';
+        role: 'Administrator' | 'Sales Executive';
       };
 
       (req as AuthRequest).user = decoded;
@@ -60,7 +60,7 @@ export const isAdmin = (
 ): void => {
   const user = (req as AuthRequest).user;
 
-  if (!user || user.role !== 'admin') {
+  if (!user || user.role !== 'Administrator') {
     res.status(403).json({
       success: false,
       message: 'Admin access required'

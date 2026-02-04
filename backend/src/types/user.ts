@@ -4,7 +4,7 @@ export interface User {
   email: string;
   password_hash?: string;
   full_name?: string;
-  role: 'admin' | 'agent';
+  role: 'Administrator' | 'Sales Executive';
   is_active?: boolean;
   created_at?: Date;
   updated_at?: Date;
@@ -31,7 +31,7 @@ export interface AuthResponse {
     username: string;
     email: string;
     full_name?: string;
-    role: 'admin' | 'agent';
+    role: 'Administrator' | 'Sales Executive';
   };
   message?: string;
 }
