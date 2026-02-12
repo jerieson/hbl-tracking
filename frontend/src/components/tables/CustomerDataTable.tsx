@@ -13,6 +13,7 @@ import {
 import { Customer } from '@/types/customer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -29,7 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Edit, Trash2, ChevronDown, ChevronUp, ChevronsUpDown, Search, Mail, Phone, MapPin, Building2, Briefcase } from 'lucide-react';
+import { Edit, Trash2, ChevronDown, ChevronUp, ChevronsUpDown, Search, Mail, Phone, MapPin, Building2, Briefcase, User } from 'lucide-react';
 
 interface DataTableProps {
   data: Customer[];
@@ -50,7 +51,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            className="hover:bg-muted p-0 font-semibold text-foreground"
+            className="hover:bg-muted p-0 font-semibold"
           >
             Company Name
             {column.getIsSorted() === 'asc' ? (
@@ -64,7 +65,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
         );
       },
       cell: ({ row }) => (
-        <div className="font-medium text-foreground">{row.getValue('company_name')}</div>
+        <div className="font-medium">{row.getValue('company_name')}</div>
       ),
     },
     {
@@ -146,7 +147,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            className="hover:bg-muted p-0 font-semibold text-foreground"
+            className="hover:bg-muted p-0 font-semibold"
           >
             Status
             {column.getIsSorted() === 'asc' ? (
@@ -164,20 +165,12 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
         const tapped = row.original.tapped;
         return (
           <div className="flex gap-1.5">
-            <span
-              className={`status-badge ${
-                status === 'active'
-                  ? 'bg-success/10 text-success border border-success/20'
-                  : 'bg-muted text-muted-foreground border border-border'
-              }`}
-            >
+            <Badge variant={status === 'active' ? 'default' : 'secondary'}>
               {status}
-            </span>
-            {tapped && (
-              <span className="status-badge bg-info/10 text-info border border-info/20">
-                Tapped
-              </span>
-            )}
+            </Badge>
+            <Badge variant="outline">
+              {tapped ? 'Tapped' : 'Untapped'}
+            </Badge>
           </div>
         );
       },
@@ -193,7 +186,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
               variant="ghost"
               size="icon"
               onClick={() => onEdit(customer)}
-              className="h-8 w-8 hover:bg-accent hover:text-accent-foreground transition-colors"
+              className="h-8 w-8"
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -201,7 +194,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
               variant="ghost"
               size="icon"
               onClick={() => customer.id && onDelete(customer.id)}
-              className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive transition-colors"
+              className="h-8 w-8 text-destructive hover:text-destructive"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -243,7 +236,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
             placeholder="Search customers..."
             value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-9 h-11 bg-card shadow-sm"
+            className="pl-9 h-10"
           />
         </div>
         <Select
@@ -252,7 +245,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
             table.getColumn('status')?.setFilterValue(value === 'all' ? '' : value)
           }
         >
-          <SelectTrigger className="w-full sm:w-[180px] h-11 bg-card shadow-sm">
+          <SelectTrigger className="w-full sm:w-[160px] h-10">
             <SelectValue placeholder="Filter status" />
           </SelectTrigger>
           <SelectContent>
@@ -263,14 +256,14 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
         </Select>
       </div>
 
-      {/* Desktop Table View - Hidden on Mobile */}
-      <div className="hidden md:block rounded-lg border-2 border-border bg-card shadow-lg table-elevated">
+      {/* Desktop Table View */}
+      <div className="hidden md:block rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="hover:bg-transparent border-b-2 border-border bg-muted/30">
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="font-semibold text-foreground h-12">
+                  <TableHead key={header.id} className="font-semibold">
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -284,10 +277,10 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="hover:bg-muted/50 transition-colors border-b border-border"
+                  className="hover:bg-muted/50"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-4">
+                    <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -295,8 +288,8 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center">
-                  <div className="text-muted-foreground">No customers found.</div>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <div className="text-muted-foreground text-sm">No customers found.</div>
                 </TableCell>
               </TableRow>
             )}
@@ -304,39 +297,31 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
         </Table>
       </div>
 
-      {/* Mobile Card View - Visible Only on Mobile */}
+      {/* Mobile Card View */}
       <div className="md:hidden space-y-3">
         {table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => {
             const customer = row.original;
             return (
-              <Card key={row.id} className="shadow-md border-2 border-border hover:shadow-lg transition-shadow">
+              <Card key={row.id} className="shadow-sm">
                 <CardContent className="p-4">
                   <div className="space-y-3">
-                    {/* Header */}
-                    <div className="flex items-start justify-between gap-3 pb-3 border-b border-border">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Building2 className="h-5 w-5 text-primary flex-shrink-0" />
-                          <h3 className="font-semibold text-foreground truncate">
+                    {/* Header with Company */}
+                    <div className="flex items-start justify-between gap-3 pb-3 border-b">
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <h3 className="font-semibold text-sm truncate">
                             {customer.company_name}
                           </h3>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
-                          <span
-                            className={`status-badge ${
-                              customer.status === 'active'
-                                ? 'bg-success/10 text-success border border-success/20'
-                                : 'bg-muted text-muted-foreground border border-border'
-                            }`}
-                          >
+                          <Badge variant={customer.status === 'active' ? 'default' : 'secondary'} className="text-xs">
                             {customer.status}
-                          </span>
-                          {customer.tapped && (
-                            <span className="status-badge bg-info/10 text-info border border-info/20">
-                              Tapped
-                            </span>
-                          )}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {customer.tapped ? 'Tapped' : 'Untapped'}
+                          </Badge>
                         </div>
                       </div>
                     </div>
@@ -345,26 +330,28 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
                     <div className="space-y-2.5 text-sm">
                       {/* Contact Person */}
                       {(customer.first_name || customer.last_name) && (
-                        <div className="flex items-center gap-2">
-                          <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                          <span className="font-medium">
-                            {customer.first_name} {customer.last_name}
+                        <div className="flex items-start gap-2">
+                          <User className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium">
+                              {customer.first_name} {customer.last_name}
+                            </span>
                             {customer.designation && (
-                              <span className="text-muted-foreground ml-1 font-normal">
-                                • {customer.designation}
+                              <span className="text-muted-foreground block text-xs mt-0.5">
+                                {customer.designation}
                               </span>
                             )}
-                          </span>
+                          </div>
                         </div>
                       )}
 
                       {/* Email */}
                       {customer.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <div className="flex items-start gap-2">
+                          <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                           <a 
                             href={`mailto:${customer.email}`}
-                            className="text-primary hover:underline truncate"
+                            className="text-primary hover:underline truncate text-xs"
                           >
                             {customer.email}
                           </a>
@@ -373,11 +360,11 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
 
                       {/* Phone */}
                       {customer.contact_number && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <div className="flex items-start gap-2">
+                          <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                           <a 
                             href={`tel:${customer.country_code}${customer.contact_number}`}
-                            className="text-primary hover:underline"
+                            className="text-primary hover:underline text-xs"
                           >
                             {customer.country_code} {customer.contact_number}
                           </a>
@@ -388,9 +375,11 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
                       <div className="flex items-start gap-2">
                         <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-muted-foreground">{customer.business_address}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {customer.business_address}
+                          </p>
                           {customer.area && (
-                            <p className="text-xs text-muted-foreground/75 mt-1">
+                            <p className="text-muted-foreground/75 text-xs mt-1">
                               Area: {customer.area}
                             </p>
                           )}
@@ -399,31 +388,42 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
 
                       {/* Nature of Business */}
                       {customer.nature_of_business && (
+                        <div className="flex items-start gap-2">
+                          <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                          <span className="text-xs text-muted-foreground">
+                            {customer.nature_of_business}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Remarks */}
+                      {customer.remarks && (
                         <div className="bg-muted/50 px-3 py-2 rounded-md">
-                          <span className="text-xs font-medium text-muted-foreground">Business:</span>
-                          <span className="text-sm ml-2">{customer.nature_of_business}</span>
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium">Remarks:</span> {customer.remarks}
+                          </p>
                         </div>
                       )}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2 pt-3 border-t border-border">
+                    <div className="flex gap-2 pt-3 border-t">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => onEdit(customer)}
-                        className="flex-1 h-10 border-2 hover:bg-accent hover:text-accent-foreground hover:border-accent"
+                        className="flex-1 h-9"
                       >
-                        <Edit className="mr-2 h-4 w-4" />
+                        <Edit className="mr-2 h-3.5 w-3.5" />
                         Edit
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => customer.id && onDelete(customer.id)}
-                        className="flex-1 h-10 border-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+                        className="flex-1 h-9 text-destructive hover:text-destructive"
                       >
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="mr-2 h-3.5 w-3.5" />
                         Delete
                       </Button>
                     </div>
@@ -433,17 +433,17 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
             );
           })
         ) : (
-          <Card className="shadow-md border-2">
+          <Card className="shadow-sm">
             <CardContent className="p-12 text-center">
-              <div className="text-muted-foreground">No customers found.</div>
+              <div className="text-muted-foreground text-sm">No customers found.</div>
             </CardContent>
           </Card>
         )}
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-        <div className="text-sm text-muted-foreground">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+        <div className="text-xs sm:text-sm text-muted-foreground">
           Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
           {Math.min(
             (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
@@ -457,11 +457,11 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="h-10 px-4 border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50"
+            className="h-9 px-3"
           >
             Previous
           </Button>
-          <div className="text-sm font-medium px-3 py-2 bg-muted rounded-md min-w-[100px] text-center">
+          <div className="text-xs sm:text-sm font-medium px-3 py-1.5 bg-muted rounded-md min-w-[80px] text-center">
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </div>
           <Button
@@ -469,7 +469,7 @@ export function CustomerDataTable({ data, onEdit, onDelete }: DataTableProps) {
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="h-10 px-4 border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary disabled:opacity-50"
+            className="h-9 px-3"
           >
             Next
           </Button>

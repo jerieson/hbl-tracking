@@ -28,8 +28,6 @@ CREATE TABLE IF NOT EXISTS customers (
   company_name VARCHAR(255) NOT NULL,
   business_address VARCHAR(500) NOT NULL,
   nature_of_business VARCHAR(255),
-  latitude DECIMAL(10, 8),
-  longitude DECIMAL(11, 8),
   area VARCHAR(100),
   remarks TEXT,
   status ENUM('active', 'inactive') DEFAULT 'active',

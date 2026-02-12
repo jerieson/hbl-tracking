@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,60 +6,57 @@
 
 @layer base {
   :root {
-    /* New Professional Color Palette */
-    --navy-deep: 210 70% 19%;       /* #0C2C55 */
-    --teal-medium: 190 45% 32%;     /* #296374 */
-    --teal-light: 190 30% 53%;      /* #629FAD */
-    --cream: 60 46% 90%;            /* #EDEDCE */
-    
-    /* Semantic Colors - Professional with Better Visibility */
-    --background: 210 30% 98%;      /* Soft off-white with subtle blue tint */
-    --foreground: 210 70% 19%;      /* Navy for text */
-    --card: 0 0% 100%;              /* Pure white cards for contrast */
-    --card-foreground: 210 70% 19%;
+    /* shadcn neutral color scheme */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 70% 19%;
-    --primary: 210 70% 19%;         /* Navy - main brand color */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 190 45% 32%;       /* Teal medium */
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 20% 94%;           /* Light gray with blue tint */
-    --muted-foreground: 210 30% 40%;
-    --accent: 190 30% 53%;          /* Teal light */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 65% 51%;       /* Red for delete */
-    --destructive-foreground: 0 0% 100%;
-    --border: 210 20% 85%;          /* Visible border */
-    --input: 210 20% 85%;
-    --ring: 210 70% 19%;            /* Focus ring */
-    --radius: 0.5rem;               /* Clean, minimal radius */
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
     
-    /* Status colors - Professional */
-    --success: 142 71% 35%;
+    /* Accent colors for badges and buttons */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
-    --info: 190 30% 53%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 210 70% 12%;
-    --foreground: 60 46% 90%;
-    --card: 210 70% 15%;
-    --card-foreground: 60 46% 90%;
-    --popover: 210 70% 15%;
-    --popover-foreground: 60 46% 90%;
-    --primary: 190 30% 53%;
-    --primary-foreground: 210 70% 12%;
-    --secondary: 190 45% 32%;
-    --secondary-foreground: 60 46% 90%;
-    --muted: 210 20% 20%;
-    --muted-foreground: 210 20% 65%;
-    --accent: 190 30% 53%;
-    --accent-foreground: 210 70% 12%;
-    --destructive: 0 65% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 210 20% 25%;
-    --input: 210 20% 25%;
-    --ring: 190 30% 53%;
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
   }
 }
 
@@ -75,52 +72,31 @@
     -moz-osx-font-smoothing: grayscale;
     font-size: 15px;
     line-height: 1.6;
-    color: hsl(var(--foreground));
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold;
     line-height: 1.2;
-    letter-spacing: -0.01em;
   }
   
   h1 {
-    @apply text-3xl md:text-4xl;
-    font-weight: 600;
-  }
-  
-  h2 {
     @apply text-2xl md:text-3xl;
   }
   
-  h3 {
+  h2 {
     @apply text-xl md:text-2xl;
   }
   
-  button {
-    @apply font-medium;
-  }
-  
-  input, textarea, select {
-    font-size: 16px !important;
+  h3 {
+    @apply text-lg md:text-xl;
   }
 }
 
-/* Display Font for Headers */
-.font-display {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-}
-
-/* Professional Typography */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Ensure proper font size on mobile */
+@layer base {
+  @media (max-width: 768px) {
+    html {
+      font-size: 16px;
+    }
   }
-}
-
-/* Better table visibility */
-.table-elevated {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }

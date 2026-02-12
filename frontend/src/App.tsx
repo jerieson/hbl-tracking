@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
 import { LoginPage } from './pages/LoginPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -57,6 +58,7 @@ function App() {
           />
         </Routes>
       </div>
+      <Toaster />
     </Router>
   );
 }

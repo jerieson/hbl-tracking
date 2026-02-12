@@ -8,8 +8,8 @@ export class CustomerModel {
       `INSERT INTO customers (
         user_id, first_name, last_name, email, country_code, contact_number,
         designation, company_name, business_address, nature_of_business,
-        latitude, longitude, area, remarks, status, tapped
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        area, remarks, status, tapped
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         customer.user_id,
         customer.first_name || null,
@@ -21,8 +21,6 @@ export class CustomerModel {
         customer.company_name,
         customer.business_address,
         customer.nature_of_business || null,
-        customer.latitude || null,
-        customer.longitude || null,
         customer.area || null,
         customer.remarks || null,
         customer.status,

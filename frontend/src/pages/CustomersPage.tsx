@@ -7,7 +7,20 @@ import { CustomerForm } from '@/components/forms/CustomerForm';
 import { CustomerDataTable } from '@/components/tables/CustomerDataTable';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, X, LogOut, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from 'sonner';
+import { Plus, X, LogOut, User, Download } from 'lucide-react';
+import { ExportDialog } from '@/components/dialogs/Exportdialog';
 
 export const CustomersPage = () => {
   const navigate = useNavigate();
@@ -15,6 +28,8 @@ export const CustomersPage = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | undefined>();
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   
   const user = authService.getUser();
 
@@ -29,6 +44,7 @@ export const CustomersPage = () => {
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
+      toast.error('Failed to load customers');
     } finally {
       setLoading(false);
     }
@@ -39,8 +55,10 @@ export const CustomersPage = () => {
       await customerService.create(data);
       await fetchCustomers();
       setShowForm(false);
+      toast.success('Customer added successfully');
     } catch (error) {
       console.error('Error creating customer:', error);
+      toast.error('Failed to add customer');
     }
   };
 
@@ -52,19 +70,25 @@ export const CustomersPage = () => {
       await fetchCustomers();
       setEditingCustomer(undefined);
       setShowForm(false);
+      toast.success('Customer updated successfully');
     } catch (error) {
       console.error('Error updating customer:', error);
+      toast.error('Failed to update customer');
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this customer?')) return;
+  const handleDelete = async () => {
+    if (!deleteId) return;
     
     try {
-      await customerService.delete(id);
+      await customerService.delete(deleteId);
       await fetchCustomers();
+      toast.success('Customer deleted successfully');
     } catch (error) {
       console.error('Error deleting customer:', error);
+      toast.error('Failed to delete customer');
+    } finally {
+      setDeleteId(null);
     }
   };
 
@@ -85,52 +109,65 @@ export const CustomersPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
+      <div className="container mx-auto px-4 py-4 sm:py-6 max-w-7xl">
         {/* Header */}
-        <div className="mb-6 sm:mb-8 animate-fade-in">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            <div className="flex-1">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display text-primary mb-2">
+        <div className="mb-6 animate-fade-in">
+          <div className="flex flex-col gap-4 mb-6">
+            {/* Title */}
+            <div>
+              <h1 className="text-4xl sm:text-4xl font-bold text-foreground mb-1">
                 HBL
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground">
-                Customer Database Management
+              <p className="text-sm text-muted-foreground">
+                Manage your customer database
               </p>
             </div>
             
             {/* User Info & Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {/* User Badge */}
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/50 rounded-lg border-2 border-border">
-                <User className="h-4 w-4 text-primary" />
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-foreground">
+              <div className="flex items-center gap-2 px-3 py-2 bg-muted rounded-lg flex-1 sm:flex-none">
+                <User className="h-5 w-5 text-muted-foreground" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-md font-medium text-foreground truncate">
                     {user?.full_name || user?.username}
                   </span>
-                  <span className="text-xs text-muted-foreground capitalize">
+                  <Badge variant="secondary" className="text-[12px] font-thin px-1.5 py-0 w-fit">
                     {user?.role}
-                  </span>
+                  </Badge>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="flex gap-2">
                 {!showForm && (
-                  <Button 
-                    onClick={() => setShowForm(true)}
-                    className="flex-1 sm:flex-none h-11 sm:h-12 px-6 bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all"
-                  >
-                    <Plus className="mr-2 h-5 w-5" />
-                    Add Customer
-                  </Button>
+                  <>
+                    <Button 
+                      onClick={() => setShowExportDialog(true)}
+                      variant="outline"
+                      className="flex-1 sm:flex-none h-10 px-4"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      <span className="hidden sm:inline">Export</span>
+                      <span className="sm:hidden">Export CSV</span>
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => setShowForm(true)}
+                      className="flex-1 sm:flex-none h-10 px-4 bg-gradient-to-r from-teal-200 to-indigo-600"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Customer
+                    </Button>
+                  </>
                 )}
                 
                 <Button
                   variant="outline"
                   onClick={handleLogout}
-                  className="h-11 sm:h-12 px-4 border-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+                  className="h-10 px-3 sm:px-4"
                 >
-                  <LogOut className="h-5 w-5 sm:mr-2" />
+                  <LogOut className="h-4 w-4 sm:mr-2" />
                   <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
@@ -138,16 +175,16 @@ export const CustomersPage = () => {
           </div>
 
           {/* Divider */}
-          <div className="h-0.5 bg-border rounded-full" />
+          <div className="h-px bg-border" />
         </div>
 
         {/* Form */}
         {showForm && (
-          <Card className="mb-6 sm:mb-8 shadow-lg border-2 border-border animate-slide-up">
+          <Card className="mb-6 shadow-sm animate-slide-down">
             <CardHeader className="pb-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
-                  <CardTitle className="text-xl sm:text-2xl text-primary">
+                  <CardTitle className="text-xl text-foreground">
                     {editingCustomer ? 'Edit Customer' : 'Add New Customer'}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1">
@@ -158,13 +195,13 @@ export const CustomersPage = () => {
                   variant="ghost"
                   size="icon"
                   onClick={handleCancel}
-                  className="h-9 w-9 flex-shrink-0 hover:bg-muted"
+                  className="h-9 w-9 flex-shrink-0"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="px-4 sm:px-6">
+            <CardContent>
               <CustomerForm
                 customer={editingCustomer}
                 onSubmit={editingCustomer ? handleUpdate : handleCreate}
@@ -178,11 +215,11 @@ export const CustomersPage = () => {
         {!showForm && (
           <div className="animate-fade-in">
             {loading ? (
-              <Card className="shadow-lg border-2 border-border">
+              <Card className="shadow-sm">
                 <CardContent className="p-12 sm:p-16">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                    <div className="text-muted-foreground">Loading customers...</div>
+                    <div className="text-muted-foreground text-sm">Loading customers...</div>
                   </div>
                 </CardContent>
               </Card>
@@ -190,12 +227,37 @@ export const CustomersPage = () => {
               <CustomerDataTable
                 data={customers}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={(id) => setDeleteId(id)}
               />
             )}
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the customer record.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Export Dialog */}
+      <ExportDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        customers={customers}
+      />
     </div>
   );
 };

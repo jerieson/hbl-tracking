@@ -10,8 +10,6 @@ export interface Customer {
   company_name: string;
   business_address: string;
   nature_of_business?: string;
-  latitude?: number;
-  longitude?: number;
   area?: string;
   remarks?: string;
   status: 'active' | 'inactive';
